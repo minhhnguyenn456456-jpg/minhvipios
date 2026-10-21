@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/965a78.jpeg">
+    <title>MinhiOS AimLock SYSTEM</title>
+    <style>
+        :root {
+            --bg-color: #070305;
+            --card-bg: rgba(24, 14, 18, 0.9);
+            --neon-accent: #ff004c;
+            --accent-glow: rgba(255, 0, 76, 0.35);
+            --text-main: #ffffff;
+            --text-sub: #9a8289;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        html, body {
+            background-color: var(--bg-color) !important;
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 16px 12px 40px 12px;
+            box-sizing: border-box;
+            background-image: radial-gradient(circle at 50% 0%, var(--accent-glow), transparent 60%);
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Login Overlay Screen */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at 50% 0%, var(--accent-glow), transparent 60%);
+            z-index: 99999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-accent);
+            border-radius: 24px;
+            padding: 24px 20px;
+            width: 100%;
+            max-width: 360px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 0 30px var(--accent-glow);
+            text-align: center;
+        }
+
+        .login-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-accent);
+            overflow: hidden;
+            box-shadow: 0 0 15px var(--neon-accent);
+            background: #000;
+        }
+
+        .login-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .login-title {
+            font-size: 15px;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: 0.5px;
+        }
+
+        .login-subtitle {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--neon-accent);
+            letter-spacing: 1px;
+            margin-top: -10px;
+        }
+
+        .login-input-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            text-align: left;
+        }
+
+        .login-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--text-sub);
+            letter-spacing: 0.8px;
+        }
+
+        .login-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--neon-accent);
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            outline: none;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .login-input::placeholder {
+            color: var(--text-sub);
+            font-size: 11px;
+        }
+
+        .btn-connect {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ff004c, #800026);
+            color: #ffffff;
+            border: 1px solid var(--neon-accent);
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: all 0.2s ease;
+        }
+
+        .btn-connect:active {
+            transform: scale(0.98);
+        }
+
+        .device-badge {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--neon-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .support-text {
+            font-size: 10px;
+            color: var(--text-sub);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            padding-bottom: 4px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-sub);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn.active {
+            background: var(--accent-glow);
+            border-color: var(--neon-accent);
+            color: var(--neon-accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        .dot-active {
+            width: 7px;
+            height: 7px;
+            background-color: var(--neon-accent);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--neon-accent);
+        }
+
+        /* Language Panel Inside Home */
+        .control-panel {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+        }
+
+        .lang-switches {
+            display: flex;
+            gap: 6px;
+        }
+
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-sub);
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lang-btn.active {
+            background: var(--accent-glow);
+            border-color: var(--neon-accent);
+            color: var(--neon-accent);
+        }
+
+        /* Tab Content Views */
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .modules-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 4px;
+        }
+
+        .modules-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-sub);
+            letter-spacing: 1px;
+        }
+
+        .modules-count {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--neon-accent);
+        }
+
+        /* Select Box Style */
+        .select-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .custom-select {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--neon-accent);
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .custom-select option {
+            background: #070305;
+            color: #ffffff;
+        }
+
+        .toggle-item {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .toggle-info h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-info p {
+            font-size: 10px;
+            color: var(--text-sub);
+            margin-top: 4px;
+        }
+
+        /* Switch Styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .3s;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: #fff;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-glow);
+            border-color: var(--neon-accent);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(21px);
+            background-color: var(--neon-accent);
+            box-shadow: 0 0 10px var(--neon-accent);
+        }
+
+        /* ON / OFF Button Styling */
+        .status-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-sub);
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+            outline: none;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .status-btn.active {
+            background: var(--accent-glow);
+            border-color: var(--neon-accent);
+            color: var(--neon-accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+        }
+
+        /* Launch Button */
+        .btn-launch {
+            width: 100%;
+            margin-top: 4px;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff004c, #800026);
+            color: #ffffff;
+            border: 1px solid var(--neon-accent);
+            border-radius: 22px;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 0.8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--accent-glow);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .btn-launch:active {
+            transform: scale(0.98);
+        }
+
+        /* Admin Square Buttons */
+        .admin-buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            padding: 10px 0;
+        }
+
+        .admin-img-btn {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--neon-accent);
+            box-shadow: 0 0 12px var(--accent-glow);
+            transition: transform 0.2s ease;
+            text-decoration: none;
+            background: var(--card-bg);
+        }
+
+        .admin-img-btn:active {
+            transform: scale(0.92);
+        }
+
+        .admin-img-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Custom VIP Modal Popup */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border: 1px solid var(--neon-accent);
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 0 25px var(--accent-glow);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--neon-accent);
+            letter-spacing: 0.5px;
+        }
+
+        .modal-body {
+            font-size: 12px;
+            color: var(--text-main);
+            line-height: 1.5;
+            font-weight: 600;
+        }
+
+        .btn-modal-close {
+            background: var(--neon-accent);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login / License Key Screen -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div class="login-avatar">
+                <img src="https://files.catbox.moe/rvqnxf.jpeg" alt="Logo">
+            </div>
+            <div class="login-title" data-i18n="loginTitle">HỆ THỐNG HỖ TRỢ GAME</div>
+            <div class="login-subtitle">FREE FIRE / FREE FIRE MAX</div>
+
+            <div class="login-input-group">
+                <span class="login-label" data-i18n="loginKeyLabel">MÃ BẢN QUYỀN / LICENSE KEY</span>
+                <input type="text" id="license-input" class="login-input" placeholder="NHẬP MÃ KEY...">
+            </div>
+
+            <button class="btn-connect" onclick="verifyLicense()" data-i18n="connectBtn">KẾT NỐI HỆ THỐNG</button>
+
+            <div class="device-badge">
+                <span class="dot-active"></span> Device ID: IOS-VIP-9999
+            </div>
+
+            <div class="support-text" data-i18n="supportText">Hỗ Trợ Make Liên Hệ: 0976524798</div>
+        </div>
+    </div>
+
+    <div class="mobile-container" id="top-anchor">
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-btn active" id="tab-home-btn" onclick="switchTab('home', this)" data-i18n="homeTab">HOME</button>
+            <button class="nav-btn" id="tab-aim-btn" onclick="switchTab('aim', this)" data-i18n="aimTab">AIM</button>
+            <button class="nav-btn" id="tab-admin-btn" onclick="switchTab('admin', this)" data-i18n="adminTab">ADMIN</button>
+        </div>
+
+        <!-- HOME Tab View -->
+        <div id="home-view" class="tab-content active">
+            <!-- Language Panel inside HOME -->
+            <div class="control-panel">
+                <span class="panel-title" data-i18n="langTitle">LANGUAGE / NGÔN NGỮ</span>
+                <div class="lang-switches">
+                    <button class="lang-btn active" id="btn-vi" onclick="setLanguage('vi')">VI</button>
+                    <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+                </div>
+            </div>
+
+            <!-- Game Version Selector -->
+            <div class="select-card">
+                <div class="modules-title" data-i18n="gameLabel">CHỌN PHIÊN BẢN GAME</div>
+                <select class="custom-select" id="game-select">
+                    <option value="ff-normal" data-i18n="ffNormal">Free Fire thường</option>
+                    <option value="ff-max" data-i18n="ffMax">Free Fire Max</option>
+                </select>
+            </div>
+
+            <!-- iPhone Device Selector -->
+            <div class="select-card">
+                <div class="modules-title" data-i18n="deviceLabel">CHỌN THIẾT BỊ IPHONE</div>
+                <select class="custom-select">
+                    <option>iPhone 17 Pro Max</option>
+                    <option>iPhone 17 Pro</option>
+                    <option>iPhone 17</option>
+                    <option>iPhone 16 Pro Max</option>
+                    <option>iPhone 16 Pro</option>
+                    <option>iPhone 16</option>
+                    <option>iPhone 15 Pro Max</option>
+                    <option>iPhone 15 Pro</option>
+                    <option>iPhone 15</option>
+                    <option>iPhone 14 Pro Max</option>
+                    <option>iPhone 14 Pro</option>
+                    <option>iPhone 14</option>
+                    <option>iPhone 13 Pro Max</option>
+                    <option>iPhone 13 Pro</option>
+                    <option>iPhone 13</option>
+                    <option>iPhone 12 Pro Max</option>
+                    <option>iPhone 12 Pro</option>
+                    <option>iPhone 12</option>
+                    <option>iPhone 11 Pro Max</option>
+                    <option>iPhone 11 Pro</option>
+                    <option>iPhone 11</option>
+                    <option>iPhone XS Max</option>
+                    <option>iPhone XR</option>
+                    <option>iPhone X / XS</option>
+                    <option>iPhone 8 Plus</option>
+                    <option>iPhone 8</option>
+                    <option>iPhone 7 Plus</option>
+                    <option>iPhone 7</option>
+                    <option>iPhone 6s Plus</option>
+                    <option>iPhone 6s</option>
+                    <option>iPhone 6 Plus</option>
+                    <option>iPhone 6</option>
+                </select>
+            </div>
+
+            <!-- Launch Game Button -->
+            <button class="btn-launch" onclick="launchGame()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span data-i18n="launchBtn">MỞ GAME NGAY</span>
+            </button>
+
+            <div class="modules-header">
+                <span class="modules-title" data-i18n="coreModulesTitle">CORE MODULES</span>
+                <span class="modules-count" id="home-count">0 / 4</span>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="netOpt">Tối Ưu Mạng</span></h3>
+                    <p data-i18n="netOptSub">GIẢM PING BĂNG THÔNG</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" class="home-toggle" onchange="updateHomeCount()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="coordLock">Khóa Tọa Độ</span></h3>
+                    <p data-i18n="coordLockSub">ĐỊNH VỊ TÂM NGẮM</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" class="home-toggle" onchange="updateHomeCount()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="bypassSystem">Bypass System</span></h3>
+                    <p data-i18n="bypassSystemSub">VƯỢT HỆ THỐNG BẢO MẬT</p>
+                </div>
+                <button id="bypass-btn" class="status-btn" onclick="toggleStatus('bypass')">OFF</button>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="antiBan">Anti-Ban Shield</span></h3>
+                    <p data-i18n="antibanSub">BẢO VỆ TÀI KHOẢN AN TOÀN</p>
+                </div>
+                <button id="antiban-btn" class="status-btn" onclick="toggleStatus('antiban')">OFF</button>
+            </div>
+        </div>
+
+        <!-- AIM Tab View -->
+        <div id="aim-view" class="tab-content">
+            <div class="modules-header">
+                <span class="modules-title" data-i18n="aimConfigTitle">AIM CONFIG</span>
+                <span class="modules-count" id="aim-count">0 / 5</span>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="aimLock">AimLock</span></h3>
+                    <p data-i18n="aimLockSub">KHÓA TÂM MỤC TIÊU TỰ ĐỘNG</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" class="aim-toggle" onchange="updateAimCount()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="smoothV1">Nhẹ Tâm V1</span></h3>
+                    <p data-i18n="smoothV1Sub">CÂN BẰNG TỌA ĐỘ CƠ BẢN</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" class="aim-toggle" onchange="updateAimCount()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="smoothV2">Nhẹ Tâm V2</span></h3>
+                    <p data-i18n="smoothV2Sub">TỐI ƯU HÓA ĐỘ NHẠY NÂNG CAO</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" class="aim-toggle" onchange="updateAimCount()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="fixOvershoot">Fix Lố Đầu</span></h3>
+                    <p data-i18n="fixOvershootSub">CHỐNG VĂNG TÂM KHI KÉO</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" class="aim-toggle" onchange="updateAimCount()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+            <div class="toggle-item">
+                <div class="toggle-info">
+                    <h3><span class="dot-active"></span> <span data-i18n="fixJitter">Fix Rung</span></h3>
+                    <p data-i18n="fixJitterSub">KHỬ LỆCH JITTER</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" class="aim-toggle" onchange="updateAimCount()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <!-- ADMIN Tab View -->
+        <div id="admin-view" class="tab-content">
+            <div class="modules-header">
+                <span class="modules-title" data-i18n="adminConfigTitle">ADMIN PANEL</span>
+                <span class="modules-count">VIP</span>
+            </div>
+
+            <div class="admin-buttons-container">
+                <!-- Zalo Square Image Button -->
+                <a href="https://zalo.me/g/rzxoavhhjgyxndl7ajwq" target="_blank" class="admin-img-btn">
+                    <img src="https://files.catbox.moe/o7wnqk.jpeg" alt="Zalo Community">
+                </a>
+
+                <!-- Telegram Square Image Button -->
+                <a href="https://t.me/minhiosbanhacks1" target="_blank" class="admin-img-btn">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram Channel">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Alert Popup -->
+    <div id="custom-modal" class="custom-modal">
+        <div class="modal-card">
+            <div class="modal-title" data-i18n="modalTitle">THÔNG BÁO HỆ THỐNG</div>
+            <div class="modal-body" id="modal-msg" data-i18n="modalMsg">
+                Ứng Dụng Chưa Được Cài Vui Lòng Cài Game Trước Khi Sử File
+            </div>
+            <button class="btn-modal-close" onclick="closeModal()" data-i18n="modalClose">ĐÓNG</button>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            vi: {
+                homeTab: "HOME",
+                aimTab: "AIM",
+                adminTab: "ADMIN",
+                langTitle: "NGÔN NGỮ HỆ THỐNG",
+                gameLabel: "CHỌN PHIÊN BẢN GAME",
+                ffNormal: "Free Fire thường",
+                ffMax: "Free Fire Max",
+                deviceLabel: "CHỌN THIẾT BỊ IPHONE",
+                launchBtn: "MỞ GAME NGAY",
+                coreModulesTitle: "TÍNH NĂNG CHÍNH",
+                netOpt: "Tối Ưu Mạng",
+                netOptSub: "GIẢM PING BĂNG THÔNG",
+                coordLock: "Khóa Tọa Độ",
+                coordLockSub: "ĐỊNH VỊ TÂM NGẮM",
+                bypassSystem: "Bypass System",
+                bypassSystemSub: "VƯỢT HỆ THỐNG BẢO MẬT",
+                antiBan: "Anti-Ban Shield",
+                antiBanSub: "BẢO VỆ TÀI KHOẢN AN TOÀN",
+                aimConfigTitle: "CẤU HÌNH AIM",
+                aimLock: "AimLock",
+                aimLockSub: "KHÓA TÂM MỤC TIÊU TỰ ĐỘNG",
+                smoothV1: "Nhẹ Tâm V1",
+                smoothV1Sub: "CÂN BẰNG TỌA ĐỘ CƠ BẢN",
+                smoothV2: "Nhẹ Tâm V2",
+                smoothV2Sub: "TỐI ƯU HÓA ĐỘ NHẠY NÂNG CAO",
+                fixOvershoot: "Fix Lố Đầu",
+                fixOvershootSub: "CHỐNG VĂNG TÂM KHI KÉO",
+                fixJitter: "Fix Rung",
+                fixJitterSub: "KHỬ LỆCH JITTER",
+                adminConfigTitle: "BẢNG ĐIỀU KHIỂN ADMIN",
+                loginTitle: "HỆ THỐNG HỖ TRỢ GAME",
+                loginKeyLabel: "MÃ BẢN QUYỀN / LICENSE KEY",
+                connectBtn: "KẾT NỐI HỆ THỐNG",
+                supportText: "Hỗ Trợ Make Liên Hệ: 0976524798",
+                modalTitle: "THÔNG BÁO HỆ THỐNG",
+                modalMsg: "Ứng Dụng Chưa Được Cài Vui Lòng Cài Game Trước Khi Sử File",
+                keyErrorMsg: "Mã Bản Quyền Không Đúng! Vui Lòng Kiểm Tra Lại.",
+                modalClose: "ĐÓNG"
+            },
+            en: {
+                homeTab: "HOME",
+                aimTab: "AIM",
+                adminTab: "ADMIN",
+                langTitle: "SYSTEM LANGUAGE",
+                gameLabel: "SELECT GAME VERSION",
+                ffNormal: "Standard Free Fire",
+                ffMax: "Free Fire Max",
+                deviceLabel: "SELECT IPHONE MODEL",
+                launchBtn: "LAUNCH GAME NOW",
+                coreModulesTitle: "CORE MODULES",
+                netOpt: "Network Optimize",
+                netOptSub: "REDUCE PING & BANDWIDTH",
+                coordLock: "Coordinate Lock",
+                coordLockSub: "PRECISION CROSSHAIR",
+                bypassSystem: "Bypass System",
+                bypassSystemSub: "SECURITY BYPASS SYSTEM",
+                antiBan: "Anti-Ban Shield",
+                antiBanSub: "SECURE ACCOUNT PROTECTION",
+                aimConfigTitle: "AIM CONFIG",
+                aimLock: "AimLock",
+                aimLockSub: "AUTO TARGET LOCK",
+                smoothV1: "Smooth Aim V1",
+                smoothV1Sub: "BASIC COORDINATE BALANCE",
+                smoothV2: "Smooth Aim V2",
+                smoothV2Sub: "ADVANCED SENSITIVITY OPTIMIZE",
+                fixOvershoot: "Overshoot Fix",
+                fixOvershootSub: "PREVENT CROSSHAIR FLICK",
+                fixJitter: "Jitter Fix",
+                fixJitterSub: "REDUCE SHAKE & JITTER",
+                adminConfigTitle: "ADMIN PANEL",
+                loginTitle: "GAME SUPPORT SYSTEM",
+                loginKeyLabel: "LICENSE KEY",
+                connectBtn: "CONNECT SYSTEM",
+                supportText: "Support Contact: 0976524798",
+                modalTitle: "SYSTEM NOTIFICATION",
+                modalMsg: "App Not Installed. Please Install the Game First.",
+                keyErrorMsg: "Invalid License Key! Please Try Again.",
+                modalClose: "CLOSE"
+            }
+        };
+
+        function verifyLicense() {
+            const inputVal = document.getElementById('license-input').value.trim();
+            const correctKey = "MinhiOS•AimLock•ViP";
+
+            if (inputVal === correctKey) {
+                document.getElementById('login-screen').style.display = 'none';
+            } else {
+                const currentLang = document.getElementById('btn-vi').classList.contains('active') ? 'vi' : 'en';
+                showModal(translations[currentLang].keyErrorMsg);
+            }
+        }
+
+        function setLanguage(lang) {
+            document.getElementById('btn-vi').classList.toggle('active', lang === 'vi');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        function switchTab(tabName, btn) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            document.querySelectorAll('.tab-content').forEach(view => view.classList.remove('active'));
+            if (tabName === 'home') {
+                document.getElementById('home-view').classList.add('active');
+            } else if (tabName === 'aim') {
+                document.getElementById('aim-view').classList.add('active');
+            } else if (tabName === 'admin') {
+                document.getElementById('admin-view').classList.add('active');
+            }
+        }
+
+        function updateHomeCount() {
+            const checkboxes = document.querySelectorAll('.home-toggle');
+            let activeCount = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) activeCount++;
+            });
+            const bypassActive = document.getElementById('bypass-btn').classList.contains('active');
+            const antibanActive = document.getElementById('antiban-btn').classList.contains('active');
+            if (bypassActive) activeCount++;
+            if (antibanActive) activeCount++;
+
+            document.getElementById('home-count').textContent = activeCount + ' / 4';
+        }
+
+        function updateAimCount() {
+            const checkboxes = document.querySelectorAll('.aim-toggle');
+            let activeCount = 0;
+            checkboxes.forEach(cb => {
+                if (cb.checked) activeCount++;
+            });
+            document.getElementById('aim-count').textContent = activeCount + ' / 5';
+        }
+
+        function toggleStatus(type) {
+            const btn = document.getElementById(type + '-btn');
+            const isActive = btn.classList.toggle('active');
+            btn.textContent = isActive ? 'ON' : 'OFF';
+            updateHomeCount();
+        }
+
+        function showModal(msg) {
+            document.getElementById('modal-msg').textContent = msg;
+            document.getElementById('custom-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').style.display = 'none';
+        }
+
+        function launchGame() {
+            const selectedGame = document.getElementById('game-select').value;
+            const targetUrl = selectedGame === 'ff-max' ? 'freefiremax://' : 'freefire://';
+
+            let appOpened = false;
+
+            const onBlur = () => {
+                appOpened = true;
+                window.removeEventListener('pagehide', onBlur);
+                window.removeEventListener('blur', onBlur);
+            };
+
+            window.addEventListener('pagehide', onBlur);
+            window.addEventListener('blur', onBlur);
+
+            window.location.href = targetUrl;
+
+            setTimeout(() => {
+                if (!appOpened) {
+                    const currentLang = document.getElementById('btn-vi').classList.contains('active') ? 'vi' : 'en';
+                    showModal(translations[currentLang].modalMsg);
+                }
+                window.removeEventListener('pagehide', onBlur);
+                window.removeEventListener('blur', onBlur);
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
